@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PurePath - Recovery Companion</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['system-ui', 'sans-serif'],
+            },
+            colors: {
+              // Material 3 "Blue" Theme Tokens
+              primary: '#0061a4',
+              'on-primary': '#ffffff',
+              'primary-container': '#d1e4ff',
+              'on-primary-container': '#001d36',
+              
+              secondary: '#535f70',
+              'on-secondary': '#ffffff',
+              'secondary-container': '#dbe4f0',
+              'on-secondary-container': '#101c2b',
+              
+              tertiary: '#6b5778',
+              'on-tertiary': '#ffffff',
+              'tertiary-container': '#f2daff',
+              'on-tertiary-container': '#251431',
+              
+              error: '#ba1a1a',
+              'on-error': '#ffffff',
+              'error-container': '#ffdad6',
+              'on-error-container': '#410002',
+              
+              background: '#fdfcff',
+              'on-background': '#1a1c1e',
+              surface: '#fdfcff',
+              'on-surface': '#1a1c1e',
+              
+              'surface-variant': '#dfe2eb',
+              'on-surface-variant': '#43474e',
+              outline: '#73777f',
+              'outline-variant': '#c3c7cf',
+              
+              'surface-container-low': '#f7f9ff',
+              'surface-container': '#f1f4fa',
+              'surface-container-high': '#ebedf3',
+              'surface-container-highest': '#e2e2e9',
+            },
+            borderRadius: {
+              '4xl': '2rem',
+              '5xl': '2.5rem',
+            }
+          }
+        }
+      }
+    </script>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.2.1/",
+    "react": "https://aistudiocdn.com/react@^19.2.1",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/",
+    "recharts": "https://aistudiocdn.com/recharts@^3.5.1",
+    "react-markdown": "https://aistudiocdn.com/react-markdown@^10.1.0",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0",
+    "framer-motion": "https://aistudiocdn.com/framer-motion@^11.0.8",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0"
+  }
+}
+</script>
+</head>
+  <body class="bg-background text-on-background antialiased selection:bg-primary-container selection:text-on-primary-container">
+    <div id="root"></div>
+  </body>
+</html>
