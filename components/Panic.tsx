@@ -34,7 +34,7 @@ const Panic: React.FC<PanicProps> = ({ onClose }) => {
   }
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#001d36] flex flex-col items-center justify-center p-6 text-white">
+    <div className="fixed inset-0 z-50 bg-on-primary-container flex flex-col items-center justify-center p-6 text-primary-container">
       <button 
         onClick={onClose} 
         className="absolute top-8 right-8 p-4 bg-white/10 rounded-full hover:bg-white/20 transition-colors"
@@ -46,23 +46,23 @@ const Panic: React.FC<PanicProps> = ({ onClose }) => {
         
         {/* Breathing Circle */}
         <div className="relative flex items-center justify-center h-64 w-64">
-            <div className={`absolute w-40 h-40 bg-[#d1e4ff]/20 rounded-full blur-2xl transition-transform duration-[4000ms] ease-in-out ${getBreathScale()}`}></div>
-            <div className={`absolute w-32 h-32 border-[6px] border-[#d1e4ff]/40 rounded-full transition-transform duration-[4000ms] ease-in-out ${getBreathScale()}`}></div>
-            <span className="relative z-10 text-3xl font-light tracking-[0.2em] uppercase text-[#d1e4ff]">
+            <div className={`absolute w-40 h-40 bg-primary-container/20 rounded-full blur-2xl transition-transform duration-[4000ms] ease-in-out ${getBreathScale()}`}></div>
+            <div className={`absolute w-32 h-32 border-[6px] border-primary-container/40 rounded-full transition-transform duration-[4000ms] ease-in-out ${getBreathScale()}`}></div>
+            <span className="relative z-10 text-3xl font-light tracking-[0.2em] uppercase text-primary-container">
                 {getBreathText()}
             </span>
         </div>
 
         <div className="space-y-6">
-            <Zap className="w-10 h-10 text-yellow-400 mx-auto" />
-            <h2 className="text-2xl font-serif leading-relaxed px-4">
+            <Zap className="w-10 h-10 text-tertiary mx-auto" />
+            <h2 className="text-2xl font-serif leading-relaxed px-4 text-white">
                 "{advice}"
             </h2>
         </div>
 
         <button 
             onClick={onClose}
-            className="w-full max-w-xs bg-[#d1e4ff] text-[#001d36] py-5 rounded-[24px] font-bold text-xl hover:bg-white transition-colors"
+            className="w-full max-w-xs bg-primary-container text-on-primary-container py-5 rounded-[24px] font-bold text-xl hover:bg-white transition-colors"
         >
             I am Ready
         </button>

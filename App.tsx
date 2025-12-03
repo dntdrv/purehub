@@ -5,7 +5,7 @@ import Learn from './components/Learn';
 import Shield from './components/Shield';
 import Panic from './components/Panic';
 import Login from './components/Login';
-import { LayoutDashboard, Brain, Shield as ShieldIcon, AlertCircle } from 'lucide-react';
+import { LayoutDashboard, Brain, ShieldCheck, Zap } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const App: React.FC = () => {
@@ -47,11 +47,15 @@ const App: React.FC = () => {
       ...prev,
       totalCheckins: prev.totalCheckins + 1
     }));
-    // Toast logic
-    const btn = document.getElementById('checkin-toast');
-    if (btn) {
-       btn.classList.remove('translate-y-20', 'opacity-0');
-       setTimeout(() => btn.classList.add('translate-y-20', 'opacity-0'), 3000);
+    // Toast
+    const toast = document.getElementById('toast');
+    if(toast) {
+        toast.style.opacity = '1';
+        toast.style.transform = 'translateY(0)';
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateY(20px)';
+        }, 3000);
     }
   };
 
@@ -65,91 +69,99 @@ const App: React.FC = () => {
     }));
   };
 
-  if (!user) {
-    return <Login onLogin={handleLogin} />;
-  }
+  if (!user) return <Login onLogin={handleLogin} />;
 
   return (
-    <div className="min-h-screen bg-background flex justify-center text-on-surface font-sans">
-      {/* Panic Overlay */}
+    <div className="min-h-screen bg-background text-on-surface font-sans selection:bg-primary-container">
       <AnimatePresence>
         {panicMode && <Panic onClose={() => setPanicMode(false)} />}
       </AnimatePresence>
 
-      <div className="w-full max-w-md bg-surface min-h-screen relative flex flex-col shadow-2xl overflow-hidden">
+      <div className="max-w-md mx-auto min-h-screen bg-surface relative flex flex-col shadow-2xl overflow-hidden border-x border-outline-variant/10">
         
-        {/* Main Content Area */}
-        <main className="flex-1 p-6 overflow-hidden flex flex-col">
-          <AnimatePresence mode="wait">
+        {/* Top App Bar Area */}
+        <div className="absolute top-0 left-0 w-full p-6 flex justify-between items-center z-20 pointer-events-none">
+           <span className="text-sm font-bold tracking-widest text-primary/50 uppercase mix-blend-multiply">PurePath</span>
+           <motion.button 
+             initial={{ scale: 0 }} animate={{ scale: 1 }}
+             whileTap={{ scale: 0.9 }}
+             onClick={() => setPanicMode(true)}
+             className="pointer-events-auto bg-error-container text-on-error-container px-4 py-2 rounded-full text-sm font-bold flex items-center gap-2 shadow-sm border border-error/10"
+           >
+             <Zap className="w-4 h-4 fill-current" /> PANIC
+           </motion.button>
+        </div>
+
+        {/* Toast */}
+        <div 
+            id="toast"
+            className="absolute top-20 left-1/2 -translate-x-1/2 bg-on-surface/90 text-surface px-6 py-2 rounded-full text-sm font-medium opacity-0 translate-y-5 transition-all duration-500 z-30 pointer-events-none"
+        >
+            Check-in recorded
+        </div>
+
+        <main className="flex-1 overflow-y-auto scrollbar-hide pt-24 pb-32 px-6">
+          <AnimatePresence mode="wait" initial={false}>
             {view === ViewState.DASHBOARD && (
               <Dashboard key="dash" stats={stats} onCheckIn={handleCheckIn} onRelapse={handleRelapse} username={user.name} />
             )}
             {view === ViewState.LEARN && (
-              <motion.div key="learn" initial={{opacity: 0}} animate={{opacity: 1}} exit={{opacity: 0}} className="h-full">
+              <motion.div key="learn" initial={{opacity: 0, y: 20}} animate={{opacity: 1, y: 0}} exit={{opacity: 0, y: -20}}>
                  <Learn />
               </motion.div>
             )}
             {view === ViewState.SHIELD && (
-              <motion.div key="shield" initial={{opacity: 0}} animate={{opacity: 1}} exit={{opacity: 0}}>
+              <motion.div key="shield" initial={{opacity: 0, scale: 0.95}} animate={{opacity: 1, scale: 1}} exit={{opacity: 0, scale: 1.05}}>
                  <Shield />
               </motion.div>
             )}
           </AnimatePresence>
         </main>
 
-        {/* Floating Panic Button */}
-        <div className="absolute bottom-28 right-6 z-10">
-            <motion.button 
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setPanicMode(true)}
-                className="w-16 h-16 bg-error-container text-on-error-container rounded-[20px] shadow-lg flex items-center justify-center border border-error/10"
-                title="Emergency Help"
-            >
-                <AlertCircle className="w-8 h-8" />
-            </motion.button>
+        {/* M3 Expressive Navigation Bar */}
+        <div className="absolute bottom-0 left-0 w-full p-6 z-20 bg-gradient-to-t from-surface via-surface to-transparent pointer-events-none">
+          <nav className="bg-surface-container-high rounded-full p-2 flex justify-between items-center shadow-lg border border-white/50 relative pointer-events-auto">
+             <NavTab 
+               active={view === ViewState.DASHBOARD} 
+               onClick={() => setView(ViewState.DASHBOARD)} 
+               icon={LayoutDashboard} 
+               label="Focus" 
+             />
+             <NavTab 
+               active={view === ViewState.LEARN} 
+               onClick={() => setView(ViewState.LEARN)} 
+               icon={Brain} 
+               label="Learn" 
+             />
+             <NavTab 
+               active={view === ViewState.SHIELD} 
+               onClick={() => setView(ViewState.SHIELD)} 
+               icon={ShieldCheck} 
+               label="Shield" 
+             />
+          </nav>
         </div>
-
-        {/* Toast Notification */}
-        <div id="checkin-toast" className="fixed top-6 left-1/2 -translate-x-1/2 bg-on-surface text-surface px-6 py-3 rounded-full shadow-xl z-50 transition-all duration-500 translate-y-20 opacity-0 pointer-events-none">
-           Check-in recorded
-        </div>
-
-        {/* Floating Navigation Bar - M3 Style */}
-        <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-surface-container-high/90 rounded-full shadow-xl p-2 flex gap-1 z-20 border border-white/50 backdrop-blur-md">
-          <NavButton 
-            active={view === ViewState.DASHBOARD} 
-            onClick={() => setView(ViewState.DASHBOARD)} 
-            icon={LayoutDashboard} 
-            label="Home" 
-          />
-          <NavButton 
-            active={view === ViewState.LEARN} 
-            onClick={() => setView(ViewState.LEARN)} 
-            icon={Brain} 
-            label="Learn" 
-          />
-          <NavButton 
-            active={view === ViewState.SHIELD} 
-            onClick={() => setView(ViewState.SHIELD)} 
-            icon={ShieldIcon} 
-            label="Shield" 
-          />
-        </nav>
       </div>
     </div>
   );
 };
 
-const NavButton = ({ active, onClick, icon: Icon, label }: any) => (
+const NavTab = ({ active, onClick, icon: Icon, label }: any) => (
   <button 
     onClick={onClick}
-    className={`flex flex-col items-center justify-center w-20 h-16 rounded-full transition-all duration-300 ${active ? 'bg-secondary-container text-on-secondary-container' : 'text-on-surface-variant hover:bg-white/50'}`}
+    className="relative flex-1 h-14 rounded-full flex items-center justify-center transition-all duration-300 overflow-hidden group"
   >
-    <div className={`mb-1 transition-all ${active ? 'bg-secondary text-white px-5 py-1 rounded-full' : ''}`}>
-       <Icon className={`w-6 h-6 ${active ? 'text-white' : ''}`} />
+    {active && (
+      <motion.div 
+        layoutId="nav-pill"
+        className="absolute inset-0 bg-secondary-container rounded-full"
+        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+      />
+    )}
+    <div className={`relative z-10 flex items-center gap-2 transition-colors duration-300 ${active ? 'text-on-secondary-container font-semibold' : 'text-on-surface-variant group-hover:text-primary'}`}>
+       <Icon className={`w-6 h-6 ${active ? 'fill-current' : ''}`} />
+       {active && <motion.span initial={{width:0, opacity:0}} animate={{width:'auto', opacity:1}} className="text-sm overflow-hidden whitespace-nowrap">{label}</motion.span>}
     </div>
-    {!active && <span className="text-[10px] font-medium opacity-80">{label}</span>}
   </button>
 );
 

@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react';
-import { UserStats, Rank } from '../types';
-import { Trophy, Flame, RefreshCcw, ArrowUpRight } from 'lucide-react';
-import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
+import { UserStats } from '../types';
+import { Trophy, Flame, RefreshCcw, ArrowUpRight, Activity } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 interface DashboardProps {
@@ -13,153 +12,113 @@ interface DashboardProps {
 
 const Dashboard: React.FC<DashboardProps> = ({ stats, onCheckIn, onRelapse, username }) => {
   
-  const currentStreakDays = useMemo(() => {
+  const currentStreak = useMemo(() => {
     if (!stats.streakStartDate) return 0;
     const diff = Date.now() - stats.streakStartDate;
     return Math.floor(diff / (1000 * 60 * 60 * 24));
   }, [stats.streakStartDate]);
 
-  const streakData = [
-    { name: 'Completed', value: currentStreakDays },
-    { name: 'Goal (90 Days)', value: Math.max(0, 90 - currentStreakDays) },
-  ];
-
-  const COLORS = ['#0061a4', '#e2e2e9']; // Primary, Surface Variant
-
-  // Animation Variants
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { 
-      opacity: 1,
-      transition: { 
-        staggerChildren: 0.1,
-        delayChildren: 0.2
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: { y: 0, opacity: 1, transition: { type: "spring", stiffness: 300, damping: 24 } }
-  };
+  // Visual calculation for "Level" or "Phase"
+  const phaseProgress = Math.min((currentStreak % 30) / 30 * 100, 100); 
 
   return (
-    <motion.div 
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-      className="space-y-6 pb-24"
-    >
+    <div className="space-y-6">
       
-      {/* M3 Large Top App Bar equivalent */}
-      <motion.header variants={itemVariants} className="pt-4 pb-2">
-        <div className="flex justify-between items-end">
-          <div>
-             <span className="text-sm font-medium text-secondary">
-               {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}
-             </span>
-             <h1 className="text-4xl font-normal text-on-surface tracking-tight mt-1">
-               Hello, <span className="font-semibold text-primary">{username}</span>
-             </h1>
-          </div>
-          <motion.button 
-            whileTap={{ scale: 0.9 }}
-            onClick={onCheckIn} 
-            className="bg-primary-container text-on-primary-container p-4 rounded-2xl hover:brightness-105 transition-all shadow-sm"
-          >
-            <ArrowUpRight className="w-6 h-6" />
-          </motion.button>
-        </div>
-      </motion.header>
+      {/* Greeting - Large and Expressive */}
+      <header className="py-2">
+         <h1 className="text-5xl font-normal text-on-surface tracking-tighter leading-[1.1]">
+           Keep going,<br />
+           <span className="text-primary font-serif italic">{username}.</span>
+         </h1>
+      </header>
 
-      {/* Hero Card - Expressive */}
-      <motion.div variants={itemVariants} className="bg-surface-container-high rounded-[32px] p-6 relative overflow-hidden shadow-sm min-h-[300px] flex flex-col items-center justify-center">
-        <div className="flex flex-col items-center justify-center relative z-10 w-full">
-           <div className="w-64 h-64 relative mb-4">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={streakData}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={90}
-                    outerRadius={115}
-                    startAngle={90}
-                    endAngle={-270}
-                    dataKey="value"
-                    stroke="none"
-                    cornerRadius={12}
-                    paddingAngle={4}
-                  >
-                    {streakData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                </PieChart>
-              </ResponsiveContainer>
-              <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                <motion.span 
-                  initial={{ scale: 0.5, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ delay: 0.5, type: "spring" }}
-                  className="text-7xl font-bold text-on-surface-variant tracking-tighter"
-                >
-                  {currentStreakDays}
-                </motion.span>
-                <span className="text-sm font-medium text-secondary uppercase tracking-widest mt-1">Days Free</span>
-              </div>
-           </div>
-           
-           <div className="bg-white/50 backdrop-blur-sm px-6 py-2 rounded-full border border-white/20">
-              <span className="text-primary font-medium">Next Milestone: 7 Days</span>
-           </div>
-        </div>
+      {/* Main Hero Card - "The Monolith" */}
+      <motion.div 
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        className="relative bg-primary-container text-on-primary-container rounded-[32px] p-8 overflow-hidden min-h-[360px] flex flex-col justify-between shadow-sm group"
+      >
+         {/* Background Decoration */}
+         <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-primary/20 transition-colors duration-500" />
+         
+         <div className="relative z-10 flex justify-between items-start">
+            <div className="bg-white/30 backdrop-blur-md px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider text-on-primary-container/80">
+              Current Streak
+            </div>
+            <motion.button 
+               whileTap={{ scale: 0.9 }}
+               onClick={onCheckIn}
+               className="bg-on-primary-container text-primary-container p-3 rounded-2xl hover:scale-105 transition-transform"
+            >
+               <ArrowUpRight className="w-6 h-6" />
+            </motion.button>
+         </div>
+
+         <div className="relative z-10 flex flex-col items-center py-8">
+            <motion.span 
+              key={currentStreak}
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              className="text-[140px] leading-none font-bold tracking-tighter text-primary font-sans mix-blend-multiply"
+            >
+              {currentStreak}
+            </motion.span>
+            <span className="text-xl font-medium text-on-primary-container/60 mt-[-10px]">Days Clean</span>
+         </div>
+
+         {/* Progress Bar for "Next Milestone" */}
+         <div className="relative z-10">
+            <div className="flex justify-between text-sm font-medium mb-2 opacity-70">
+               <span>Level {stats.level}</span>
+               <span>{Math.round(phaseProgress)}%</span>
+            </div>
+            <div className="h-2 w-full bg-white/30 rounded-full overflow-hidden">
+               <motion.div 
+                 initial={{ width: 0 }} 
+                 animate={{ width: `${phaseProgress}%` }} 
+                 className="h-full bg-primary"
+                 transition={{ duration: 1.5, ease: "circOut" }}
+               />
+            </div>
+         </div>
       </motion.div>
 
-      {/* Stats Row */}
+      {/* Stats Grid - "Bento Box" Style */}
       <div className="grid grid-cols-2 gap-4">
-        <motion.div variants={itemVariants} className="bg-secondary-container text-on-secondary-container p-5 rounded-[28px] flex flex-col items-start gap-4 hover:shadow-md transition-shadow">
-          <div className="bg-white/20 p-3 rounded-full">
-            <Trophy className="w-6 h-6" />
-          </div>
-          <div>
-            <span className="text-3xl font-bold block">{stats.longestStreak}</span>
-            <span className="text-xs opacity-70 uppercase tracking-wide">Record</span>
-          </div>
-        </motion.div>
-
-        <motion.div variants={itemVariants} className="bg-tertiary-container text-on-tertiary-container p-5 rounded-[28px] flex flex-col items-start gap-4 hover:shadow-md transition-shadow">
-          <div className="bg-white/20 p-3 rounded-full">
-            <Flame className="w-6 h-6" />
-          </div>
-          <div>
-            <span className="text-3xl font-bold block">{stats.totalCheckins}</span>
-            <span className="text-xs opacity-70 uppercase tracking-wide">Check-ins</span>
-          </div>
-        </motion.div>
+         <StatCard icon={Trophy} label="Best Streak" value={`${stats.longestStreak}d`} color="tertiary" />
+         <StatCard icon={Flame} label="Check-ins" value={stats.totalCheckins} color="secondary" />
       </div>
 
-      {/* Relapse Action - Outlined Card */}
-      <motion.div variants={itemVariants} className="border border-outline-variant rounded-[24px] p-6 bg-surface-container-low">
-        <h3 className="text-lg font-semibold text-on-surface mb-2">Slip Up?</h3>
-        <p className="text-on-surface-variant text-sm mb-6 leading-relaxed">
-            Honesty is the foundation of recovery. Resetting is not failure; it is a recalibration of your strategy.
-        </p>
-        <motion.button 
-          whileTap={{ scale: 0.98 }}
-          onClick={() => {
-            if(confirm("Confirm reset? This will restart your current streak.")) {
-              onRelapse();
-            }
-          }}
-          className="w-full flex items-center justify-center gap-2 text-error font-medium bg-error-container/10 hover:bg-error-container/20 py-4 rounded-full transition-colors border border-error/20"
-        >
-            <RefreshCcw className="w-4 h-4" />
-            Reset Counter
-        </motion.button>
-      </motion.div>
-    </motion.div>
+      {/* The Relapse Button - De-emphasized but accessible */}
+      <div className="pt-8 flex justify-center">
+         <button 
+           onClick={() => {
+             if(confirm("This will reset your streak counter to 0. Are you sure?")) onRelapse();
+           }}
+           className="text-error/60 text-sm font-medium hover:text-error hover:underline transition-colors flex items-center gap-2"
+         >
+           <RefreshCcw className="w-3 h-3" />
+           I slipped up (Reset Counter)
+         </button>
+      </div>
+    </div>
   );
 };
+
+const StatCard = ({ icon: Icon, label, value, color }: any) => (
+  <motion.div 
+    whileHover={{ y: -4 }}
+    className={`bg-${color}-container text-on-${color}-container p-6 rounded-[28px] flex flex-col justify-between h-40 relative overflow-hidden`}
+  >
+    <Icon className="w-8 h-8 opacity-20 absolute top-4 right-4 rotate-12" />
+    <div className={`w-10 h-10 rounded-full bg-white/20 flex items-center justify-center mb-4`}>
+       <Icon className="w-5 h-5" />
+    </div>
+    <div>
+       <span className="text-4xl font-bold tracking-tight block">{value}</span>
+       <span className="text-xs font-bold uppercase tracking-wider opacity-70">{label}</span>
+    </div>
+  </motion.div>
+);
 
 export default Dashboard;

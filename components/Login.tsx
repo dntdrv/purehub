@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import { User } from '../types';
 
 interface LoginProps {
@@ -29,7 +29,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
   };
 
   // Logo Animation Variants
-  const pathVariants = {
+  const pathVariants: Variants = {
     hidden: { pathLength: 0, opacity: 0 },
     visible: { 
       pathLength: 1, 

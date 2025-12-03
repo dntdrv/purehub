@@ -5,53 +5,65 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PurePath - Recovery Companion</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Merriweather:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
     <script>
       tailwind.config = {
         theme: {
           extend: {
             fontFamily: {
-              sans: ['system-ui', 'sans-serif'],
+              sans: ['"Google Sans"', 'Roboto', 'system-ui', 'sans-serif'],
+              serif: ['"Merriweather"', 'serif'],
             },
             colors: {
-              // Material 3 "Blue" Theme Tokens
-              primary: '#0061a4',
+              // Material 3 Expressive System (Ocean & Coral)
+              primary: '#006495', // Deep Ocean
               'on-primary': '#ffffff',
-              'primary-container': '#d1e4ff',
-              'on-primary-container': '#001d36',
-              
-              secondary: '#535f70',
+              'primary-container': '#cbeaff',
+              'on-primary-container': '#001f30',
+
+              secondary: '#4d616c', // Slate
               'on-secondary': '#ffffff',
-              'secondary-container': '#dbe4f0',
-              'on-secondary-container': '#101c2b',
-              
-              tertiary: '#6b5778',
+              'secondary-container': '#d0e6f2',
+              'on-secondary-container': '#081e27',
+
+              tertiary: '#6b5778', // Wisdom/Purple
               'on-tertiary': '#ffffff',
               'tertiary-container': '#f2daff',
               'on-tertiary-container': '#251431',
-              
+
               error: '#ba1a1a',
-              'on-error': '#ffffff',
               'error-container': '#ffdad6',
               'on-error-container': '#410002',
-              
-              background: '#fdfcff',
+
+              background: '#fcfcff',
               'on-background': '#1a1c1e',
-              surface: '#fdfcff',
-              'on-surface': '#1a1c1e',
               
-              'surface-variant': '#dfe2eb',
-              'on-surface-variant': '#43474e',
-              outline: '#73777f',
-              'outline-variant': '#c3c7cf',
-              
-              'surface-container-low': '#f7f9ff',
-              'surface-container': '#f1f4fa',
-              'surface-container-high': '#ebedf3',
-              'surface-container-highest': '#e2e2e9',
+              // The Surface System (Critical for M3 Depth)
+              surface: '#f9f9fc', 
+              'on-surface': '#191c1d',
+              'surface-dim': '#d9d9e0',
+              'surface-bright': '#f9f9ff',
+              'surface-container-lowest': '#ffffff',
+              'surface-container-low': '#f3f3f6',
+              'surface-container': '#edeff1',
+              'surface-container-high': '#e7e8ec',
+              'surface-container-highest': '#e1e2e6',
+
+              outline: '#70787d',
+              'outline-variant': '#c0c8cd',
             },
             borderRadius: {
               '4xl': '2rem',
               '5xl': '2.5rem',
+            },
+            animation: {
+              'breath': 'breath 8s infinite ease-in-out',
+            },
+            keyframes: {
+              breath: {
+                '0%, 100%': { transform: 'scale(1)' },
+                '50%': { transform: 'scale(1.5)' },
+              }
             }
           }
         }
